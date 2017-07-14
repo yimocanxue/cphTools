@@ -36,5 +36,9 @@ RUN if [ ${INSTALL_GRUNT} = true ]; then \
   npm install -g grunt-cli \
 ;fi
 
+ARG INSTALL_PM2=false
+RUN if [ ${INSTALL_PM2} = true ]; then \
+  npm install -g pm2 \
+;fi
 
 CMD ["node","--help"]
