@@ -93,6 +93,14 @@ services:
     networks:
       - cphfd
       - cphbd
+  memcached:
+    build: ./memcached
+    volumes:
+      - ${DATA_PATH}/memcached:/var/lib/memcached
+    ports:
+      - "${MEMCACHED_PORT}:11211"
+    networks:
+      - cphbd
   
 networks:
   cphfd:

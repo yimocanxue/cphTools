@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+  
+  mongo0:
+    build:
+      context: ./mongo
+    command: mongod --replSet rs0 --enableMajorityReadConcern
+    container_name: mongo-rs-0
+    ports:
+        - "27010:27017"
+    tty: true
+    hostname: mongo0
+    links:
+      - mongo1
+      - mongo2
+    volumes:
+        - ${MONGOD_DATA_BASE}/rs0-0:/data/db
+    networks:
+      - mdbrs
+  mongo1:
+    build:
+      context: ./mongo
+    command: mongod --replSet rs0 --enableMajorityReadConcern
+    container_name: mongo-rs-1
+    ports:
+        - "27011:27017"
+    tty: true
+    hostname: mongo1
+    volumes:
+        - ${MONGOD_DATA_BASE}/rs0-1:/data/db
+    networks:
+      - mdbrs
+  mongo2:
+    build:
+      context: ./mongo
+    command: mongod --replSet rs0 --enableMajorityReadConcern
+    container_name: mongo-rs-2
+    ports:
+        - "27012:27017"
+    tty: true
+    hostname: mongo2
+    volumes:
+        - ${MONGOD_DATA_BASE}/rs0-2:/data/db
+    networks:
+      - mdbrs
+
+networks:
+  mdbrs:
+    driver: bridge
+
