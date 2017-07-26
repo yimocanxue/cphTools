@@ -1,0 +1,87 @@
+version: '3'
+
+services:
+  
+  startup:
+    build:
+      context: ./setup
+      args:
+        - MDB_RS_NAME=${MDB_RS_NAME}
+        - MDB_PRIMARY_HOST=${MDB_PRIMARY_HOST}
+        - MDB_PRIMARY_PORT=${MDB_PRIMARY_PORT}
+        - MDB_SEC_1_HOST=${MDB_SEC_1_HOST}
+        - MDB_SEC_1_PORT=${MDB_SEC_1_PORT}
+        - MDB_SEC_2_HOST=${MDB_SEC_2_HOST}
+        - MDB_SEC_2_PORT=${MDB_SEC_2_PORT}
+        - MDB_SEC_3_HOST=${MDB_SEC_3_HOST}
+        - MDB_SEC_3_PORT=${MDB_SEC_3_PORT}
+        - MDB_SEC_4_HOST=${MDB_SEC_4_HOST}
+        - MDB_SEC_4_PORT=${MDB_SEC_4_PORT}
+        - MDB_SEC_5_HOST=${MDB_SEC_5_HOST}
+        - MDB_SEC_5_PORT=${MDB_SEC_5_PORT}
+        - MDB_ARBITER_HOST=${MDB_ARBITER_HOST}
+        - MDB_ARBITER_PORT=${MDB_ARBITER_PORT}
+    container_name: ${MDB_RS_NAME}-setup
+    ports:
+        - "2222:22"
+    depends_on:
+      - primary
+      - secondary1
+      - secondary2
+      - arbiter
+    networks:
+      - mdbrs
+
+  primary:
+    build:
+      context: ./conf
+    command: mongod --replSet ${MDB_RS_NAME} 
+    container_name: ${MDB_RS_NAME}-0
+    ports:
+        - "${MDB_PRIMARY_PORT}:27017"
+    tty: true
+    volumes:
+        - ${MDB_DATA_BASE}/${MDB_RS_NAME}-0:/data/db
+    networks:
+      - mdbrs
+
+  secondary1:
+    build:
+      context: ./conf
+    command: mongod --replSet ${MDB_RS_NAME} 
+    container_name: ${MDB_RS_NAME}-1
+    ports:
+        - "${MDB_SEC_1_PORT}:27017"
+    tty: true
+    volumes:
+        - ${MDB_DATA_BASE}/${MDB_RS_NAME}-1:/data/db
+    networks:
+      - mdbrs
+
+  secondary2:
+    build:
+      context: ./conf
+    command: mongod --replSet ${MDB_RS_NAME} 
+    container_name: ${MDB_RS_NAME}-2
+    ports:
+        - "${MDB_SEC_2_PORT}:27017"
+    tty: true
+    volumes:
+        - ${MDB_DATA_BASE}/${MDB_RS_NAME}-2:/data/db
+    networks:
+      - mdbrs
+
+  arbiter:
+    build:
+      context: ./conf
+    command: mongod --replSet ${MDB_RS_NAME} --smallfiles 
+    container_name: ${MDB_RS_NAME}-arbiter
+    ports:
+        - "${MDB_ARBITER_PORT}:27017"
+    networks:
+      - mdbrs
+
+networks:
+  mdbrs:
+    driver: bridge
+
