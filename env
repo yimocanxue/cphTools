@@ -4,6 +4,26 @@ DATA_PATH=./.data
 
 TIMEZONE=UTC
 
+##############
+# workspace
+##############
+
+# workspace容器root密码
+WP_ROOT_PWD=root
+
+# 宿主机免密workspace容器的ssh公钥
+WP_LOCAL_SSH_KEY=''
+
+# 是否安装node.js,可选值：[false/true/6.11.1/latest],可选版本：6.11.1/latest,默认版本为６.11.1
+WP_INSTALL_NODE=false
+
+# 是否安装mongo,安装后可以作为管理mongo容器实例客户端
+WP_INSTALL_MONGO=false
+
+# 是否安装
+WP_INSTALL_SASS=false
+
+
 # NGINX
 NGINX_USER=www
 NGINX_GROUP=www
@@ -45,26 +65,3 @@ MONGOD_PORT=27017
 
 # memcached
 MEMCACHED_PORT=11211
-
-# mongo副本集配置
-MDB_DATA_BASE=./.data/mdbrs
-MDB_RS_NAME=cph-mongo-rs
-
-MDB_PRIMARY_HOST=192.168.0.105
-MDB_PRIMARY_PORT=27017
-# 6个复制节点
-MDB_SEC_1_HOST=192.168.0.105
-MDB_SEC_1_PORT=27011
-MDB_SEC_2_HOST=192.168.0.105
-MDB_SEC_2_PORT=27012
-
-MDB_SEC_3_HOST=10.47.182.112
-MDB_SEC_3_PORT=27013
-MDB_SEC_4_HOST=10.47.182.112
-MDB_SEC_4_PORT=27014
-MDB_SEC_5_HOST=10.47.182.112
-MDB_SEC_5_PORT=27015
-
-# 仲裁节点
-MDB_ARBITER_HOST=192.168.0.105
-MDB_ARBITER_PORT=27000

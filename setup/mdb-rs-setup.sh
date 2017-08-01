@@ -26,6 +26,21 @@ mongo --host $MDB_PRIMARY_HOST --port $MDB_PRIMARY_PORT <<EOF
                 "priority": 3
             },
             {
+                "_id": 3,
+                "host": "$MDB_SEC_3_HOST:$MDB_SEC_3_PORT",
+                "priority": 1
+            },
+            {
+                "_id": 4,
+                "host": "$MDB_SEC_4_HOST:$MDB_SEC_4_PORT",
+                "priority": 1
+            },
+            {
+                "_id": 5,
+                "host": "$MDB_SEC_5_HOST:$MDB_SEC_5_PORT",
+                "priority": 1
+            },
+            {
                 "_id": 6,
                 "host": "$MDB_ARBITER_HOST:$MDB_ARBITER_PORT",
                 "priority": 1,
