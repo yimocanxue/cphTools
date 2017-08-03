@@ -12,13 +12,12 @@ RUN echo "deb http://mirrors.163.com/debian/ jessie main non-free contrib" > /et
     echo "deb-src http://mirrors.163.com/debian/ jessie-backports main non-free contrib" >> /etc/apt/sources.list && \
     echo "deb http://mirrors.163.com/debian-security/ jessie/updates main non-free contrib" >> /etc/apt/sources.list && \
     echo "deb-src http://mirrors.163.com/debian-security/ jessie/updates main non-free contrib" >> /etc/apt/sources.list && \
-    apt-get update -yqq && \
+    apt-get update -yq && \
     apt-get install -yq iputils-ping && \
     apt-get install -yq openssh-server && \
     mkdir -p /var/run/sshd && \
     sed -i "s/UsePrivilegeSeparation.*/UsePrivilegeSeparation no/g" /etc/ssh/sshd_config && \
     sed -i "s/PermitRootLogin without-password/PermitRootLogin yes/g" /etc/ssh/sshd_config && \
-    echo root:root | chpasswd && \
     apt-get install -yq vim
 
 
@@ -37,6 +36,7 @@ ARG MDB_SEC_5_HOST
 ARG MDB_SEC_5_PORT
 ARG MDB_ARBITER_HOST
 ARG MDB_ARBITER_PORT
+
 
 
 # 植入环境变量
@@ -58,9 +58,24 @@ RUN echo "MDB_RS_NAME=${MDB_RS_NAME}\nexport MDB_RS_NAME\n" \
 
 
 
-COPY mdb-rs-setup.sh /
-RUN chmod +x /mdb-rs-setup.sh
+# ssh 登录密码
+ARG SSH_ROOT_PWD
+RUN if [ -n "${SSH_ROOT_PWD}" ]; then \
+    echo root:${SSH_ROOT_PWD} | chpasswd  \
+;fi
 
-CMD /mdb-rs-setup.sh
+
+# 免密码登录
+ARG LOCAL_SSH_KEY
+RUN if [ -n "${LOCAL_SSH_KEY}" ]; then \
+    mkdir -p /root/.ssh && \
+    echo ${LOCAL_SSH_KEY} > /root/.ssh/authorized_keys \
+;fi
+
+
+COPY mongo-rs-setup.sh /
+RUN chmod +x /mongo-rs-setup.sh
+
+CMD /mongo-rs-setup.sh
 
 EXPOSE 22

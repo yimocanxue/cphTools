@@ -1,12 +1,44 @@
+#####################【文件说明】####################
+#
+# 本文件是docker-compose编排文件依赖变量的定义文件，没有
+# 做版本跟踪，第一次clone到本地后先复制该文件到.env,然后
+# 根据需要修改各变量即可。
+# 例如： cp env .env，然后修改.env
+#
+####################################################
+
+
+
+
+# 本地应用代码存放目录
 APP_PATH=../
 
+# 数据持久化目录
 DATA_PATH=./.data
 
 TIMEZONE=UTC
 
-##############
-# workspace
-##############
+# 提供ssh登录的容器，root密码
+SSH_ROOT_PWD=root
+
+# 提供ssh登录的容易，免密码登录本机ssh公钥，不需要则留空
+LOCAL_SSH_KEY=""
+
+
+
+###################《WORKSPACE 配置》###################
+#
+# 本实例是一个基于ubuntu内核的容器，相当于一个工作区，比如前端
+# 开发中需要实时编译sass/coffescript、自动任务(grunt/glup)
+# 以及php开发中php-cli命令行交互执行执行任务脚本等，
+# 因此本实例可以选择安装常见工具（比如：ruby/python/sass
+# /grunt-cli/node/npm/composer）以及sshd服务，这样宿主机
+# 可以方便登录容器执行各种任务。
+# 容器天然隔离宿主机环境，方便定制，宿主机也不用安装乱七八糟和
+# 开发相关的东西，更关键的是在多人开发时，每个人都能轻易的复制
+# 一个相同的开发/编译/运行环境。
+#
+#######################################################
 
 # workspace容器root密码
 WP_ROOT_PWD=root
@@ -24,7 +56,14 @@ WP_INSTALL_MONGO=false
 WP_INSTALL_SASS=false
 
 
-# NGINX
+
+
+
+
+###################《NGINX 配置》#######################
+#
+#######################################################
+
 NGINX_USER=www
 NGINX_GROUP=www
 NGINX_HTTP_PORT=80
@@ -32,7 +71,13 @@ NGINX_HTTPS_PORT=443
 NGINX_LOG_PATH=./logs/nginx/
 NGINX_SITES_PATH=./nginx/sites/
 
-# php-fpm
+
+
+
+###################《PHP-FPM 配置》#####################
+#
+#######################################################
+
 INSTALL_SOAP=true
 INSTALL_XDEBUG=false
 INSTALL_SWOOLE=false
@@ -48,7 +93,13 @@ INSTALL_INTL=true
 INSTALL_LDAP=false
 
 
-# MySQL
+
+
+
+###################《MySQL 配置》#######################
+#
+#######################################################
+
 MYSQL_DATABASE=carph-server
 MYSQL_USER=carph-server
 MYSQL_PASSWORD=123456
@@ -59,9 +110,57 @@ MYSQL_ROOT_PASSWORD=root
 PMA_PORT=8080
 
 
-# mongo
+
+
+
+
+###################《Memcached 配置》####################
+#
+#######################################################
+
+MEMCACHED_PORT=11211
+
+
+
+
+
+###################《单实例MongoDB 配置》###################
+#
+#######################################################
+
 MONGOD_PORT=27017
 
 
-# memcached
-MEMCACHED_PORT=11211
+
+
+
+
+###################《MongoDB 7个实例副本集配置》#############
+#
+# 1个主实例、5个副本实例、以及一个仲裁节点，测试环境都部署在
+# 本机，生产环境至少分两个数据中心节点和1个仲裁节点3个节点部署
+# 以保障故障迁移顺利选出新的主节点和数据冗余。
+#
+#######################################################
+
+MDB_DATA_BASE=./.data/mongo-cluster
+MDB_RS_NAME=cph-mongo-rs
+# 主实例
+MDB_PRIMARY_HOST=192.168.0.188
+MDB_PRIMARY_PORT=27017
+
+# 5个副本
+MDB_SEC_1_HOST=192.168.0.188
+MDB_SEC_1_PORT=27011
+MDB_SEC_2_HOST=192.168.0.188
+MDB_SEC_2_PORT=27012
+MDB_SEC_3_HOST=192.168.0.188
+MDB_SEC_3_PORT=27013
+MDB_SEC_4_HOST=192.168.0.188
+MDB_SEC_4_PORT=27014
+MDB_SEC_5_HOST=192.168.0.188
+MDB_SEC_5_PORT=27015
+
+# 仲裁节点
+MDB_ARBITER_HOST=192.168.0.188
+MDB_ARBITER_PORT=27000

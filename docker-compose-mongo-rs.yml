@@ -1,0 +1,136 @@
+#########################################
+# 本文件是专门用于mongo集群的实例容器编排文件
+#########################################
+
+version: '3'
+
+services:
+
+  startup:
+    build:
+      context: ./mongo
+      dockerfile: Dockerfile-rs
+      args:
+        - MDB_RS_NAME=${MDB_RS_NAME}
+        - MDB_PRIMARY_HOST=${MDB_PRIMARY_HOST}
+        - MDB_PRIMARY_PORT=${MDB_PRIMARY_PORT}
+        - MDB_SEC_1_HOST=${MDB_SEC_1_HOST}
+        - MDB_SEC_1_PORT=${MDB_SEC_1_PORT}
+        - MDB_SEC_2_HOST=${MDB_SEC_2_HOST}
+        - MDB_SEC_2_PORT=${MDB_SEC_2_PORT}
+        - MDB_SEC_3_HOST=${MDB_SEC_3_HOST}
+        - MDB_SEC_3_PORT=${MDB_SEC_3_PORT}
+        - MDB_SEC_4_HOST=${MDB_SEC_4_HOST}
+        - MDB_SEC_4_PORT=${MDB_SEC_4_PORT}
+        - MDB_SEC_5_HOST=${MDB_SEC_5_HOST}
+        - MDB_SEC_5_PORT=${MDB_SEC_5_PORT}
+        - MDB_ARBITER_HOST=${MDB_ARBITER_HOST}
+        - MDB_ARBITER_PORT=${MDB_ARBITER_PORT}
+        - SSH_ROOT_PWD=${SSH_ROOT_PWD}
+        - LOCAL_SSH_KEY=${LOCAL_SSH_KEY}
+    container_name: ${MDB_RS_NAME}-setup
+    ports:
+        - "2222:22"
+    depends_on:
+      - primary
+      - secondary1
+      - secondary2
+      - secondary3
+      - secondary4
+      - secondary5
+      - arbiter
+      
+    networks:
+      - mongo-rs
+
+
+  primary:
+    build:
+      context: ./mongo
+    command: mongod --replSet ${MDB_RS_NAME}
+    container_name: ${MDB_RS_NAME}-0
+    ports:
+        - "${MDB_PRIMARY_PORT}:27017"
+    tty: true
+    volumes:
+        - ${MDB_DATA_BASE}/${MDB_RS_NAME}-0:/data/db
+    networks:
+      - mongo-rs
+
+  secondary1:
+    build:
+      context: ./mongo
+    command: mongod --replSet ${MDB_RS_NAME}
+    container_name: ${MDB_RS_NAME}-1
+    ports:
+        - "${MDB_SEC_1_PORT}:27017"
+    tty: true
+    volumes:
+        - ${MDB_DATA_BASE}/${MDB_RS_NAME}-1:/data/db
+    networks:
+      - mongo-rs
+
+
+  secondary2:
+    build:
+      context: ./mongo
+    command: mongod --replSet ${MDB_RS_NAME}
+    container_name: ${MDB_RS_NAME}-2
+    ports:
+        - "${MDB_SEC_2_PORT}:27017"
+    volumes:
+        - ${MDB_DATA_BASE}/${MDB_RS_NAME}-2:/data/db
+    networks:
+      - mongo-rs
+
+
+  secondary3:
+    build:
+      context: ./mongo
+    command: mongod --replSet ${MDB_RS_NAME}
+    container_name: ${MDB_RS_NAME}-3
+    ports:
+        - "${MDB_SEC_3_PORT}:27017"
+    volumes:
+        - ${MDB_DATA_BASE}/${MDB_RS_NAME}-3:/data/db
+    networks:
+      - mongo-rs
+
+
+  secondary4:
+    build:
+      context: ./mongo
+    command: mongod --replSet ${MDB_RS_NAME}
+    container_name: ${MDB_RS_NAME}-4
+    ports:
+        - "${MDB_SEC_4_PORT}:27017"
+    volumes:
+        - ${MDB_DATA_BASE}/${MDB_RS_NAME}-4:/data/db
+    networks:
+      - mongo-rs
+
+  secondary5:
+    build:
+      context: ./mongo
+    command: mongod --replSet ${MDB_RS_NAME}
+    container_name: ${MDB_RS_NAME}-5
+    ports:
+        - "${MDB_SEC_5_PORT}:27017"
+    volumes:
+        - ${MDB_DATA_BASE}/${MDB_RS_NAME}-5:/data/db
+    networks:
+      - mongo-rs
+
+  arbiter:
+    build:
+      context: ./mongo
+    command: mongod --replSet ${MDB_RS_NAME} --smallfiles
+    container_name: ${MDB_RS_NAME}-arbiter
+    ports:
+        - "${MDB_ARBITER_PORT}:27017"
+    networks:
+      - mongo-rs
+
+networks:
+  mongo-rs:
+    driver: bridge
