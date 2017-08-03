@@ -24,6 +24,9 @@ services:
       - cphfd
       - cphbd
 
+
+
+
   php-fpm:
     build:
       context: ./php-fpm
@@ -50,6 +53,7 @@ services:
       - cphbd
 
 
+
   mysql:
     build:
       context: ./mysql
@@ -69,6 +73,8 @@ services:
       - cphfd
       - cphbd
 
+
+
   mongo:
     build:
       context: ./mongo
@@ -78,6 +84,9 @@ services:
         - ${DATA_PATH}/mongo:/data/db
     networks:
       - cphbd
+
+
+
 
   phpmyadmin:
     build: ./phpmyadmin
@@ -93,12 +102,26 @@ services:
     networks:
       - cphfd
       - cphbd
+
+
+
   memcached:
     build: ./memcached
     volumes:
       - ${DATA_PATH}/memcached:/var/lib/memcached
     ports:
       - "${MEMCACHED_PORT}:11211"
+    networks:
+      - cphbd
+
+
+
+  redis:
+    build: ./redis
+    volumes:
+      - ${DATA_PATH}/redis:/data
+    ports:
+      - "6379:6379"
     networks:
       - cphbd
   
