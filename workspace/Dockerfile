@@ -22,6 +22,45 @@ RUN echo "deb http://mirrors.163.com/ubuntu/ trusty main restricted universe mul
 
 
 #######################
+# 安装node
+#######################
+
+ARG WP_INSTALL_NODE=false
+#RUN if [ ${WP_INSTALL_NODE} != false ]; then \
+  # 这里使用阿里云tnvm替代nvm
+#  curl -O https://raw.githubusercontent.com/aliyun-node/tnvm/master/install.sh && \
+#  sed -i 's/--no-check-certificate/ /g' install.sh && \
+#  chmod +x install.sh && \
+#  ./install.sh && \
+#  echo "" >> ~/.bashrc && \
+#  echo 'export TNVM_DIR="/root/.tnvm"' >> ~/.bashrc && \
+#  echo '[ -s "$TNVM_DIR/tnvm.sh" ] && . "$TNVM_DIR/tnvm.sh" ' >> ~/.bashrc && \
+#  . ~/.bashrc && \
+#  rm -f install.sh && \
+  # 安装node
+#  tnvm install node-v${WP_INSTALL_NODE} && \
+#  tnvm use node-v${WP_INSTALL_NODE} && \
+
+  # 更换npm源
+#  npm config set registry https://registry.npm.taobao.org　&& \
+  # 安装grunt-cli/gulp bower等
+#  npm install -g grunt-cli　gulp bower vue-cli \
+#;fi
+
+RUN if [ ${WP_INSTALL_NODE} != false ]; then \
+  curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash && \
+  echo "" >> ~/.bashrc && \
+  echo 'export NVM_DIR="$HOME/.nvm"' >> ~/.bashrc && \
+  echo '[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm' >> ~/.bashrc && \
+  . ~/.bashrc && \
+  export NVM_NODEJS_ORG_MIRROR=https://npm.taobao.org/mirrors/node && \
+  nvm install v${WP_INSTALL_NODE} && \
+  nvm use v${WP_INSTALL_NODE} && \
+  nvm alias v${WP_INSTALL_NODE}  \
+
+;fi
+
+#######################
 # 安装sass
 #######################
 
@@ -38,8 +77,9 @@ RUN if [ ${WP_INSTALL_SASS} = true ]; then \
   sass -v \
 ;fi
 
-
+# 暴露端口
+ARG WP_WEB_PORT=3000
+ARG WP_WEB_TO_LOCAL=3000
+EXPOSE [22,${WP_WEB_PORT}]
 
 CMD bash
-
-EXPOSE 22

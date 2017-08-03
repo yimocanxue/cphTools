@@ -1,7 +1,25 @@
 version: '3'
 
 services:
-  
+
+  workspace:
+    build:
+      context: ./workspace
+      args:
+        - WP_INSTALL_NODE=${WP_INSTALL_NODE}
+        - WP_INSTALL_MONGO=${WP_INSTALL_MONGO}
+        - WP_INSTALL_SASS=${WP_INSTALL_SASS}
+        - WP_INSTALL_PHP=${WP_INSTALL_PHP}
+        - WP_INSTALL_COMPOSER=${WP_INSTALL_COMPOSER}
+    volumes:
+      - ${APP_PATH}:/var/www
+    ports:
+      - ${WP_SSH_PORT}:22
+      - ${WP_WEB_TO_LOCAL}:${WP_WEB_PORT}
+    networks:
+      - cphfd
+      - cphbd
+
   nginx:
     build:
       context: ./nginx
@@ -124,11 +142,9 @@ services:
       - "6379:6379"
     networks:
       - cphbd
-  
+
 networks:
   cphfd:
     driver: bridge
   cphbd:
     driver: bridge
-
-
