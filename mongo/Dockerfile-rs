@@ -54,7 +54,7 @@ RUN echo "MDB_RS_NAME=${MDB_RS_NAME}\nexport MDB_RS_NAME\n" \
     "MDB_SEC_5_HOST=${MDB_SEC_5_HOST}\nexport MDB_SEC_5_HOST\n" \
     "MDB_SEC_5_PORT=${MDB_SEC_5_PORT}\nexport MDB_SEC_5_PORT\n" \
     "MDB_ARBITER_HOST=${MDB_ARBITER_HOST}\nexport MDB_ARBITER_HOST\n" \
-    "MDB_ARBITER_PORT=${MDB_ARBITER_PORT}\nexport MDB_ARBITER_PORT\n" >> /etc/profile 
+    "MDB_ARBITER_PORT=${MDB_ARBITER_PORT}\nexport MDB_ARBITER_PORT\n" >> /etc/profile
 
 
 

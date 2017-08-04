@@ -7,15 +7,17 @@ services:
       context: ./workspace
       args:
         - WP_INSTALL_NODE=${WP_INSTALL_NODE}
-        - WP_INSTALL_MONGO=${WP_INSTALL_MONGO}
         - WP_INSTALL_SASS=${WP_INSTALL_SASS}
-        - WP_INSTALL_PHP=${WP_INSTALL_PHP}
-        - WP_INSTALL_COMPOSER=${WP_INSTALL_COMPOSER}
+        - SSH_ROOT_PWD=${SSH_ROOT_PWD}
+        - LOCAL_SSH_KEY=${LOCAL_SSH_KEY}
     volumes:
       - ${APP_PATH}:/var/www
+    links:
+      - mongo
+      - redis
     ports:
-      - ${WP_SSH_PORT}:22
-      - ${WP_WEB_TO_LOCAL}:${WP_WEB_PORT}
+      - "${WP_SSH_PORT}:22"
+      - "${WP_WEB_TO_LOCAL}:${WP_WEB_PORT}"
     networks:
       - cphfd
       - cphbd
@@ -131,8 +133,6 @@ services:
       - "${MEMCACHED_PORT}:11211"
     networks:
       - cphbd
-
-
 
   redis:
     build: ./redis
