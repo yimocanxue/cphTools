@@ -18,7 +18,7 @@ RUN echo "deb http://mirrors.163.com/debian/ jessie main non-free contrib" > /et
     mkdir -p /var/run/sshd && \
     sed -i "s/UsePrivilegeSeparation.*/UsePrivilegeSeparation no/g" /etc/ssh/sshd_config && \
     sed -i "s/PermitRootLogin without-password/PermitRootLogin yes/g" /etc/ssh/sshd_config && \
-    apt-get install -yq vim curl
+    apt-get install -yq vim curl python make gcc g++ git
 
 
 
@@ -41,7 +41,8 @@ RUN if [ ${WP_INSTALL_NODE} != false ]; then \
 
   # 更换淘宝源和常用工具
   npm config set registry https://registry.npm.taobao.org && \
-  npm install -g grunt-cli \
+  # node-gyp是一个跨平台的编译native addone module的命令行工具，有些npm模块的安装需要用到，因此这里默认安装
+  npm install -g grunt-cli node-gyp \
 
 ;fi
 
