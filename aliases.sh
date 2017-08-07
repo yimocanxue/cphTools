@@ -6,6 +6,8 @@
 
 SSHPORT=2222
 RCFILE=~/.bashrc
+CURRENTPATH=$(cd `dirname $0`; pwd)
+
 [ "${SHELL}" = /bin/zsh ] && { RCFILE=~/.zshrc ;}
 [ ! -e ${RCFILE} ] && {
     echo "# create by cphTool" > ${RCFILE};
@@ -16,9 +18,9 @@ echo "# cphTool command alias" >> ${RCFILE} && \
 echo "alias dps=\"docker-compose\"" >> ${RCFILE} && \
 echo "alias workspace=\"ssh -p ${SSHPORT} root@127.0.0.1\"" >> ${RCFILE} && \
 # 连接到redis
-echo "alias _redis=\"docker-compose exec redis redis-cli\"" >> ${RCFILE} && \
+echo "alias _redis=\"cd ${CURRENTPATH} && docker-compose exec redis redis-cli\"" >> ${RCFILE} && \
 # 连接到mongo数据库，命令前面加下划线是为了避免和本机mongo客户端命令冲突
-echo "alias _mongo=\"docker-compose exec mongo mongo\"" >> ${RCFILE} && \
+echo "alias _mongo=\"cd ${CURRENTPATH}  && docker-compose exec mongo mongo\"" >> ${RCFILE} && \
 
 # 启动应用run appName(文件夹名称)
 echo "run() {"  >> ${RCFILE} && \
