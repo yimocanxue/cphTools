@@ -8,6 +8,9 @@ services:
       args:
         - WP_INSTALL_NODE=${WP_INSTALL_NODE}
         - WP_INSTALL_SASS=${WP_INSTALL_SASS}
+        - WP_USER=${WP_USER}
+        - WP_PUID=${WP_PUID}
+        - WP_PGID=${WP_PGID}
         - SSH_ROOT_PWD=${SSH_ROOT_PWD}
         - LOCAL_SSH_KEY=${LOCAL_SSH_KEY}
     volumes:
