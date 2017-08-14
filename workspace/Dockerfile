@@ -79,7 +79,10 @@ RUN if [ ${WP_INSTALL_SASS} = true ]; then \
   gem sources -a https://ruby.taobao.org/ && \
   gem sources -l && \
   gem install sass --pre && \
-  sass -v \
+  # 解决sass编译中文报错问题
+  echo "" >> /var/lib/gems/2.1.0/gems/$(ls /var/lib/gems/2.1.0/gems/ | grep sass)/lib/sass/engine.rb && \
+  echo "Encoding.default_external = Encoding.find('utf-8')" >> /var/lib/gems/2.1.0/gems/$(ls /var/lib/gems/2.1.0/gems/ | grep sass)/lib/sass/engine.rb  \
+
 ;fi
 
 
